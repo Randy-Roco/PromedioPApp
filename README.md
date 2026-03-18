@@ -1,115 +1,132 @@
-# PromedioPApp
+# 📍 PromedioPApp
 
-App para consolidar y promediar **Puntos de Apoyo (PA)** obtenidos en terreno, agrupando por descriptor y permitiendo corregir variantes como `PA01`, `PA-01`, `PA001` o aliases manuales como `PA001 -> PA01`.
+Aplicación para el **procesamiento y promediado automático de Puntos de Apoyo (PA)** obtenidos en terreno, diseñada para flujos de trabajo en **Geomensura, Topografía y Fotogrametría**.
 
-## Qué resuelve
-- carga uno o varios `.txt`
-- detecta registros de PA
-- normaliza descriptores automáticamente
-- permite aliases manuales por proyecto u operador
-- promedia coordenadas `X,Y,Z` por descriptor final
-- exporta a **Excel** y a **TXT** según perfil de software
-- deja el núcleo listo para usar luego en una web o API
+---
 
-## Formatos de entrada soportados
-### 1) Formato tipo Civil 3D / terreno
-```txt
-ID,Y,X,Z,DESC
-```
+## 🚀 ¿Qué hace esta app?
 
-### 2) Formato sin ID
-```txt
-Y,X,Z,DESC
-```
+PromedioPApp permite:
 
-## Formatos de salida implementados
-### Civil 3D
-- codificación UTF-8
-- sin cabecera
-- orden: `Y,X,Z,DESC`
+- 📂 Cargar uno o varios archivos `.txt` de levantamientos en terreno
+- 🔍 Identificar automáticamente puntos de apoyo (PA)
+- 🧠 Normalizar descriptores (ej: `PA-01`, `PA01`, `PA001`)
+- 🔗 Unificar puntos mediante **aliases personalizados**
+- 📊 Calcular promedios de coordenadas (X, Y, Z)
+- ✏️ Revisar y editar resultados antes de exportar
+- 📤 Exportar resultados en múltiples formatos compatibles con software topográfico
 
-### ERDAS
-- con cabecera
-- orden: `P,Y,X,Z,DESC`
+---
 
-## Estructura del proyecto
-```txt
-PromedioPApp/
-├─ api/
-│  └─ index.py
-├─ promediopapp/
-│  ├─ __init__.py
-│  └─ core.py
-├─ app_desktop.py
-├─ requirements.txt
-├─ vercel.json
-├─ .gitignore
-└─ README.md
-```
+## 📥 Formato de entrada
 
-## Ejecución local
-```bash
-pip install -r requirements.txt
-python app_desktop.py
-```
+Archivos `.txt` con estructura tipo:
 
-## Uso de la app desktop
+ID,Y,X,Z,DESCRIPTOR
+
+Ejemplo:
+
+P1,7300000.123,500000.456,123.789,PA01
+
+---
+
+## 📤 Formatos de salida
+
+🟢 Civil 3D  
+- Codificación: UTF-8  
+- Sin cabecera  
+- Formato:  
+Y,X,Z,DESCRIPTOR  
+
+🔵 ERDAS  
+- Con cabecera  
+- Formato:  
+P,Y,X,Z,DESCRIPTOR  
+
+---
+
+## 🧩 Funcionalidades clave
+
+🔄 Normalización automática  
+Convierte automáticamente:  
+PA-01, PA 01, PA001 → PA01  
+
+🔗 Sistema de aliases  
+Permite agrupar manualmente puntos mal digitados  
+
+Ejemplo (`aliases_pa_ejemplo.json`):
+
+{
+  "PA001": "PA01",
+  "PA1": "PA01"
+}
+
+📊 Promedio de coordenadas  
+
+X_prom = promedio(X)  
+Y_prom = promedio(Y)  
+Z_prom = promedio(Z)  
+
+---
+
+## 🖥️ Uso de la aplicación
+
+Ejecutar:
+
+pip install -r requirements.txt  
+python app_desktop.py  
+
+O usar:
+
+START_APP.bat  
+
+---
+
+## 🧪 Flujo de trabajo
+
 1. Cargar archivos `.txt`
-2. Agregar aliases si hace falta, por ejemplo `PA001 -> PA01`
-3. Procesar
-4. Revisar la tabla **Promedios editables**
-5. Elegir formato de salida
-6. Exportar a Excel o TXT
+2. Revisar agrupación automática
+3. Aplicar aliases si es necesario
+4. Visualizar resultados
+5. Exportar a Excel o TXT (Civil 3D / ERDAS)
 
-## API preparada para Vercel
-Ya viene una API mínima en `api/index.py` para más adelante conectar una web. Endpoints base:
-- `GET /`
-- `POST /procesar`
+---
 
-## Cómo subir a GitHub desde tu PC
-Tu carpeta local será:
-```txt
-C:\Users\Randy\Desktop\PromedioPA
-```
+## 📁 Estructura del proyecto
 
-Copia aquí todos los archivos del repo y luego ejecuta en PowerShell:
+PromedioPApp/  
+├── app_desktop.py  
+├── promediopapp/core.py  
+├── api/index.py  
+├── requirements.txt  
+├── vercel.json  
+├── README.md  
 
-```powershell
-cd C:\Users\Randy\Desktop\PromedioPA
-git init
-git branch -M main
-git remote add origin https://github.com/Randy-Roco/PromedioPApp.git
-git add .
-git commit -m "Primer commit PromedioPApp"
-git push -u origin main
-```
+---
 
-Si el repositorio ya existe con contenido remoto:
-```powershell
-cd C:\Users\Randy\Desktop\PromedioPA
-git init
-git branch -M main
-git remote add origin https://github.com/Randy-Roco/PromedioPApp.git
-git pull origin main --allow-unrelated-histories
-git add .
-git commit -m "Actualiza PromedioPApp con exportación TXT y API base"
-git push -u origin main
-```
+## 🌐 Futuro (Roadmap)
 
-## Cómo dejarlo listo para Vercel
-Cuando el repo ya esté en GitHub:
-1. Entrar a Vercel
-2. Import Project desde GitHub
-3. Elegir `PromedioPApp`
-4. Framework: **Other**
-5. Deploy
+- Versión web en Vercel  
+- Exportación a Leica, Trimble, Topcon  
+- Detección de outliers  
+- Visualización espacial  
+- Integración con ArcGIS / QGIS  
 
-Con eso quedará publicada la API Python definida en `api/index.py`.
+---
 
-## Próximos pasos recomendados
-- perfiles extra de exportación para Leica / Trimble / Topcon / Carlson / ArcGIS
-- tolerancia y outliers por descriptor
-- validación de duplicados sospechosos
-- interfaz web con drag & drop
-- histórico de aliases por faena
-- empaquetado `.exe`
+## 👷 Autor
+
+Randy Roco Mellado  
+Ingeniero en Geomensura  
+
+---
+
+## ⚡ Enfoque
+
+Reducir errores humanos, estandarizar datos y acelerar el procesamiento de puntos de apoyo.
+
+---
+
+## 🧠 Licencia
+
+Uso libre para fines académicos y profesionales.
